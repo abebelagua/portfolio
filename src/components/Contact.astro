@@ -1,0 +1,61 @@
+---
+interface SocialLink {
+	name: string;
+	url: string;
+	icon: string;
+}
+
+interface Props {
+	socialLinks: SocialLink[];
+	resumeUrl?: string;
+}
+
+const { socialLinks, resumeUrl } = Astro.props;
+---
+
+<section id="contact" class="py-20 px-4 sm:px-6 lg:px-8">
+	<div class="max-w-4xl mx-auto text-center">
+		<h2 class="text-4xl md:text-5xl font-bold mb-4">
+			<span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+				Let's Connect
+			</span>
+		</h2>
+		<p class="text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
+			Feel free to reach out through any of these platforms or download my resume
+		</p>
+		
+		<div class="flex flex-wrap justify-center gap-6 mb-12">
+			{socialLinks.map((link) => (
+				<a
+					key={link.name}
+					href={link.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="group relative px-6 py-4 bg-slate-800/50 backdrop-blur-sm rounded-xl border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:-translate-y-1 min-w-[140px]"
+				>
+					<div class="flex flex-col items-center gap-2">
+						<span class="text-2xl">{link.icon}</span>
+						<span class="text-gray-300 group-hover:text-purple-400 transition-colors font-medium">
+							{link.name}
+						</span>
+					</div>
+				</a>
+			))}
+		</div>
+
+		{resumeUrl && (
+			<div id="resume" class="mt-8">
+				<a
+					href={resumeUrl}
+					download
+					class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 font-medium shadow-lg shadow-purple-500/50 hover:scale-105"
+				>
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+					</svg>
+					Download Resume
+				</a>
+			</div>
+		)}
+	</div>
+</section>

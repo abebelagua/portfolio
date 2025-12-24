@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import Skills from '../components/Skills.astro';
+import Projects from '../components/Projects.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import { personalInfo, skills, projects, socialLinks, resumeUrl } from '../data/portfolio';
+---
+
+<Layout title={`${personalInfo.name} - Portfolio`} description={personalInfo.bio}>
+	<Navigation />
+	<main>
+		<Hero
+			name={personalInfo.name}
+			title={personalInfo.title}
+			bio={personalInfo.bio}
+		/>
+		<Skills skills={skills} />
+		<Projects projects={projects} />
+		<Contact socialLinks={socialLinks} resumeUrl={resumeUrl} />
+	</main>
+	<Footer />
+</Layout>
