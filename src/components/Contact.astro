@@ -12,26 +12,18 @@ interface Props {
 
 const { socialLinks, resumeUrl } = Astro.props;
 
-// Build the correct resume URL with Astro's base path
+// Build URL with base path for GitHub Pages
+// Files in public/ are served from the root, so we need to prepend the base path
 const getResumeUrl = (url: string | undefined) => {
   if (!url) return undefined;
-  // If the URL is already absolute, return it as is
   if (url.startsWith("http")) return url;
 
-  // In production (GitHub Pages), use absolute URL
-  if (import.meta.env.PROD) {
-    const site = import.meta.env.SITE || "https://abebelagua.github.io";
-    const base = import.meta.env.BASE_URL;
-    const cleanUrl = url.startsWith("/") ? url : "/" + url;
-    const basePath = base.endsWith("/") ? base.slice(0, -1) : base;
-    return `${site}${basePath}${cleanUrl}`;
-  }
-
-  // In development, use relative path (Astro handles it)
+  // Get base URL (e.g., "/portfolio" or "/")
   const base = import.meta.env.BASE_URL;
-  const cleanUrl = url.startsWith("/") ? url : "/" + url;
-  const basePath = base.endsWith("/") ? base.slice(0, -1) : base;
-  return basePath + cleanUrl;
+  // Remove leading slash from url, then combine
+  const cleanUrl = url.startsWith("/") ? url.slice(1) : url;
+  // Combine base and url, ensuring proper slashes
+  return base + cleanUrl;
 };
 
 const finalResumeUrl = getResumeUrl(resumeUrl);
@@ -76,7 +68,6 @@ const finalResumeUrl = getResumeUrl(resumeUrl);
         <div id="resume" class="mt-8">
           <a
             href={finalResumeUrl}
-            download="Andy_Bebelagua_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 font-medium shadow-lg shadow-purple-500/50 hover:scale-105"
