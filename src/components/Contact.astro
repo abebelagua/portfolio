@@ -12,18 +12,26 @@ interface Props {
 
 const { socialLinks, resumeUrl } = Astro.props;
 
-// Build URL with base path for GitHub Pages
-// Files in public/ are served from the root, so we need to prepend the base path
+// Build absolute URL for resume PDF to work correctly on GitHub Pages
 const getResumeUrl = (url: string | undefined) => {
   if (!url) return undefined;
   if (url.startsWith("http")) return url;
 
-  // Get base URL (e.g., "/portfolio" or "/")
+  // In production, use absolute URL with site and base path
+  if (import.meta.env.PROD) {
+    const site = import.meta.env.SITE || "https://abebelagua.github.io";
+    const base = import.meta.env.BASE_URL;
+    // Ensure base doesn't end with / and url starts with /
+    const basePath = base.endsWith("/") ? base.slice(0, -1) : base;
+    const cleanUrl = url.startsWith("/") ? url : "/" + url;
+    return `${site}${basePath}${cleanUrl}`;
+  }
+
+  // In development, use relative path
   const base = import.meta.env.BASE_URL;
-  // Remove leading slash from url, then combine
-  const cleanUrl = url.startsWith("/") ? url.slice(1) : url;
-  // Combine base and url, ensuring proper slashes
-  return base + cleanUrl;
+  const cleanUrl = url.startsWith("/") ? url : "/" + url;
+  const basePath = base.endsWith("/") ? base.slice(0, -1) : base;
+  return basePath + cleanUrl;
 };
 
 const finalResumeUrl = getResumeUrl(resumeUrl);
@@ -82,10 +90,10 @@ const finalResumeUrl = getResumeUrl(resumeUrl);
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            Download Resume
+            View Resume
           </a>
         </div>
       )
